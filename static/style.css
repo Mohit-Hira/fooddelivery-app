@@ -1,0 +1,14 @@
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f9f4; }
+.header { display:flex; justify-content:space-between; padding:15px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+.restaurant-list { list-style:none; padding:0; display:flex; flex-wrap:wrap; gap:15px; }
+.restaurant-list li { background:#fff; padding:10px; border-radius:10px; box-shadow:0 0 5px rgba(0,0,0,0.1); text-align:center; }
+.menu-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:15px; padding:10px; }
+.menu-item { background:#fff; border-radius:10px; padding:10px; text-align:center; }
+.menu-item img { width:100%; border-radius:10px; }
+.cart-sidebar { position:fixed; right:0; top:70px; width:250px; background:#fff; height:80%; padding:15px; box-shadow:-2px 0 5px rgba(0,0,0,0.1); }
+.cart-sidebar h3 { margin-top:0; }
+.cart-total { margin-top:10px; font-weight:bold; }
+.auth-box { background:#fff; width:300px; margin:50px auto; padding:20px; border-radius:10px; box-shadow:0 0 8px rgba(0,0,0,0.2); text-align:center; }
+.auth-box input { width:90%; margin:6px 0; padding:8px; }
+.auth-box button { padding:8px 12px; margin-top:10px; cursor:pointer; width:95%; }
+#message { margin:10px 0; font-weight:bold; }

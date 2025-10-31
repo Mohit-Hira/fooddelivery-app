@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: food_delivery_app
+    ports:
+      - "8080:8080"          # host:container
+    volumes:
+      - .:/app               # Mount code for hot reload
+      - ./gcloud_creds.json:/app/gcloud_creds.json:ro
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/gcloud_creds.json
+    command: >
+      uvicorn main:app --host 0.0.0.0 --port 8080 --reload

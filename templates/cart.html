@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% block title %}Your Cart - Yummies{% endblock %}
+
+{% block content %}
+<div class="cart-page">
+
+  <!-- Header -->
+  <header class="cart-header">
+    <h1>🛒 Your Cart</h1>
+    <p>Review your selected items before payment</p>
+  </header>
+
+  <!-- Cart Items -->
+  <section id="cart-items">
+    <!-- Dynamically generated -->
+  </section>
+
+  <!-- Cart Summary -->
+  <section class="cart-summary">
+    <div class="total">
+      <span>Total:</span> €<span id="cart-total">0.00</span>
+    </div>
+    <button id="checkout-btn">Proceed to Payment</button>
+  </section>
+
+</div>
+
+<!-- Payment Confirmation Modal -->
+<div id="payment-modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>💳 Confirm Payment</h2>
+    <p>Total: €<span id="modal-total">0.00</span></p>
+    <p>Click below to confirm your order.</p>
+    <button id="pay-btn">Pay Now ✅</button>
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+  <button class="nav-btn" id="home-btn">🏠<span>Home</span></button>
+  <button class="nav-btn" id="menu-btn">🍔<span>Menu</span></button>
+  <button class="nav-btn" id="chat-btn">💬<span>Chat</span></button>
+  <button class="nav-btn" id="fav-btn">❤️<span>Favorites</span></button>
+  <button class="nav-btn" id="profile-btn">👤<span>Profile</span></button>
+</nav>
+
+<style>
+body { font-family: 'Poppins', sans-serif; background:#FDF6F0; margin:0; padding-bottom:80px; color:#333; }
+.cart-page { max-width:700px; margin:20px auto; padding:10px; }
+.cart-header { text-align:center; margin-bottom:20px; }
+.cart-header h1 { color:#E46A1C; font-size:2em; margin-bottom:5px; }
+.cart-header p { color:#666; font-size:0.95em; }
+
+#cart-items { display:flex; flex-direction:column; gap:12px; }
+.cart-item {
+  display:flex; justify-content:space-between; align-items:center;
+  background:#fff; padding:12px; border-radius:12px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+.cart-item span { font-weight:500; }
+.qty-controls {
+  display:flex; align-items:center; gap:6px;
+}
+.qty-btn {
+  background:#E46A1C; color:#fff; border:none; border-radius:8px;
+  padding:5px 8px; cursor:pointer; font-size:1em;
+}
+.qty-btn:hover { background:#ff7a2a; }
+.qty-value { font-weight:600; }
+
+.remove-btn {
+  background:transparent; color:#E46A1C; border:none; cursor:pointer;
+  font-size:1.2em; font-weight:700;
+}
+
+.cart-summary {
+  margin-top:25px; background:#fff; padding:15px; border-radius:15px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.cart-summary .total { font-weight:700; font-size:1.2em; }
+#checkout-btn {
+  background:#E46A1C; color:#fff; border:none; border-radius:12px;
+  padding:10px 20px; cursor:pointer; transition:0.2s;
+}
+#checkout-btn:hover { background:#ff7a2a; }
+
+/* Modal */
+.modal { display:none; position:fixed; z-index:2000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); }
+.modal-content { background:#fff; margin:15% auto; padding:20px; border-radius:15px; max-width:400px; text-align:center; position:relative; }
+.modal-content button { background:#E46A1C; color:#fff; border:none; border-radius:12px; padding:10px 20px; cursor:pointer; margin-top:10px; }
+.modal-content button:hover { background:#ff7a2a; }
+.close { position:absolute; top:10px; right:20px; font-size:1.5em; cursor:pointer; }
+
+/* Bottom Nav */
+.bottom-nav {
+  position:fixed; bottom:0; left:0; width:100%; background:#fff;
+  box-shadow:0 -2px 10px rgba(0,0,0,0.1); display:flex;
+  justify-content:space-around; padding:8px 0; z-index:1000;
+}
+.nav-btn { background:none; border:none; color:#888; font-size:1.2em; display:flex; flex-direction:column; align-items:center; cursor:pointer; transition:0.2s; font-weight:500; }
+.nav-btn span { font-size:0.75em; }
+.nav-btn.active, .nav-btn:hover { color:#E46A1C; }
+</style>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function calcTotal() {
+  return cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+}
+
+function renderCart() {
+  const container = document.getElementById("cart-items");
+  container.innerHTML = "";
+  if (!cart.length) {
+    container.innerHTML = "<p style='text-align:center;color:#999;'>Your cart is empty!</p>";
+    document.getElementById("cart-total").textContent = "0.00";
+    return;
+  }
+
+  let total = 0;
+  cart.forEach((item, idx) => {
+    const subtotal = item.price * item.qty;
+    total += subtotal;
+    const div = document.createElement("div");
+    div.className = "cart-item";
+    div.innerHTML = `
+      <span>${item.name}</span>
+      <div class="qty-controls">
+        <button class="qty-btn decrease" data-index="${idx}">−</button>
+        <span class="qty-value">${item.qty}</span>
+        <button class="qty-btn increase" data-index="${idx}">+</button>
+      </div>
+      <span>€${subtotal.toFixed(2)}</span>
+      <button class="remove-btn" data-index="${idx}">✕</button>
+    `;
+    container.appendChild(div);
+  });
+
+  document.getElementById("cart-total").textContent = total.toFixed(2);
+  attachEvents();
+}
+
+function attachEvents() {
+  document.querySelectorAll(".increase").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const i = btn.dataset.index;
+      cart[i].qty++;
+      saveCart();
+      renderCart();
+    });
+  });
+
+  document.querySelectorAll(".decrease").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const i = btn.dataset.index;
+      cart[i].qty--;
+      if (cart[i].qty <= 0) cart.splice(i, 1);
+      saveCart();
+      renderCart();
+    });
+  });
+
+  document.querySelectorAll(".remove-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const i = btn.dataset.index;
+      cart.splice(i, 1);
+      saveCart();
+      renderCart();
+    });
+  });
+}
+
+// Checkout opens modal
+document.getElementById("checkout-btn").addEventListener("click", () => {
+  if (!cart.length) return alert("Your cart is empty!");
+  document.getElementById("modal-total").textContent = calcTotal().toFixed(2);
+  document.getElementById("payment-modal").style.display = "block";
+});
+
+// Modal close
+document.querySelector(".close").addEventListener("click", () => {
+  document.getElementById("payment-modal").style.display = "none";
+});
+window.onclick = e => {
+  if(e.target==document.getElementById("payment-modal"))
+    document.getElementById("payment-modal").style.display="none";
+};
+
+// Pay Now confirmation
+document.getElementById("pay-btn").addEventListener("click", () => {
+  fetch("/api/orders", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      restaurant_id: "rest1",
+      items: cart,
+      total: calcTotal()
+    })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.ok){
+      alert("✅ Payment confirmed! Order placed successfully!");
+      cart=[];
+      saveCart();
+      renderCart();
+      document.getElementById("payment-modal").style.display="none";
+    } else alert("❌ Failed to place order.");
+  })
+  .catch(err=>alert("Error: "+err));
+});
+
+// Bottom navigation
+document.getElementById("home-btn").addEventListener("click",()=>location.href="/home");
+document.getElementById("menu-btn").addEventListener("click",()=>location.href="/menu");
+document.getElementById("chat-btn").addEventListener("click",()=>location.href="/chat");
+document.getElementById("fav-btn").addEventListener("click",()=>location.href="/favorites");
+document.getElementById("profile-btn").addEventListener("click",()=>location.href="/profile");
+
+window.addEventListener("DOMContentLoaded", renderCart);
+</script>
+{% endblock %}

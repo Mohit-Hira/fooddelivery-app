@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}Favorites - Yummies{% endblock %}
+
+{% block content %}
+<div class="menu-page">
+
+  <!-- Hero Section -->
+  <section class="menu-hero">
+    <img src="/static/images/favorite-food.jpg" alt="Favorites Banner" class="hero-img">
+    <div class="hero-overlay">
+      <h1>Your Favorites</h1>
+      <button class="cart-btn" id="cart-btn">🛒 <span id="cart-count">0</span></button>
+    </div>
+  </section>
+
+  <!-- Header -->
+  <header class="menu-header">
+    <h2>FAVORITE ITEMS</h2>
+    <p>Items you love the most!</p>
+  </header>
+
+  <!-- Favorites List -->
+  <section class="menu-section">
+    <div class="menu-content">
+      <ul class="menu-list" id="favorites-list">
+        <!-- Favorite items will be dynamically injected here -->
+      </ul>
+    </div>
+  </section>
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+  <button class="nav-btn" id="home-btn">🏠<span>Home</span></button>
+  <button class="nav-btn" id="menu-btn">🍔<span>Menu</span></button>
+  <button class="nav-btn" id="chat-btn">💬<span>Chat</span></button>
+  <button class="nav-btn active" id="fav-btn">❤️<span>Favorites</span></button>
+  <button class="nav-btn" id="profile-btn">👤<span>Profile</span></button>
+</nav>
+
+<style>
+/* Base & Hero Section */
+body { font-family: 'Poppins', sans-serif; background: #111; color: #fff; margin: 0; padding-bottom: 80px; }
+.menu-hero { position: relative; height: 220px; overflow: hidden; border-bottom: 3px solid #E46A1C; }
+.hero-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(60%); }
+.hero-overlay { position: absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column; color:#fff; text-align:center; }
+.hero-overlay h1 { font-size:2.5em; font-weight:700; margin:0; }
+.cart-btn { position:absolute; top:20px; right:20px; background:#E46A1C; border:none; color:#fff; font-size:1.1em; padding:8px 12px; border-radius:10px; cursor:pointer; }
+.cart-btn span { font-weight:bold; margin-left:5px; }
+.cart-btn:hover { background:#ff7a2a; }
+
+/* Header */
+.menu-header { text-align:center; margin:30px 0; }
+.menu-header h2 { color:#E46A1C; font-size:1.6em; margin-bottom:5px; }
+.menu-header p { color:#ccc; font-size:0.95em; }
+
+/* Favorites List */
+.menu-section { margin-bottom:40px; }
+.menu-list { list-style:none; padding:0; margin:0; }
+.menu-list li { display:flex; justify-content:space-between; align-items:center; background:#1a1a1a; border-radius:12px; padding:12px 16px; margin:10px 20px; box-shadow:0 2px 6px rgba(0,0,0,0.3); transition: transform 0.2s ease; }
+.menu-list li:hover { transform: scale(1.02); }
+.menu-list span { font-size:1em; font-weight:500; }
+.add-btn, .fav-btn, .qty-btn { background: #E46A1C; border: none; color: #fff; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size:0.9em; margin-left:5px; transition: background 0.2s; }
+.add-btn:hover, .fav-btn:hover, .qty-btn:hover { background: #ff7a2a; }
+.fav-btn.active { background: #fff; color:#E46A1C; }
+.qty-controls { display:flex; align-items:center; gap:5px; }
+.qty-value { min-width:20px; text-align:center; font-weight:600; }
+
+/* Bottom Navigation */
+.bottom-nav { position:fixed; bottom:0; left:0; width:100%; background:#fff; box-shadow:0 -2px 8px rgba(0,0,0,0.1); display:flex; justify-content:space-around; padding:8px 0; z-index:1000; }
+.nav-btn { background:none; border:none; color:#888; font-size:1.2em; display:flex; flex-direction:column; align-items:center; font-weight:500; cursor:pointer; transition:0.2s; }
+.nav-btn span { font-size:0.75em; }
+.nav-btn.active, .nav-btn:hover { color:#E46A1C; }
+</style>
+
+<script>
+// Initialize cart & favorites
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+// Price lookup
+const menuPrices = {
+  "Cheeseburger": 34,"Cheese Sandwich": 22,"Chicken Burger": 23,"Spicy Chicken": 33,"Hot Dog": 24,
+  "Fruit Salad": 13,"Cocktails": 12,"Nuggets": 14,"Sandwich": 13,"French Fries": 15,
+  "Milk Shake": 3,"Iced Tea": 2,"Orange Juice": 4,"Lemon Tea": 3,"Coffee": 5
+};
+
+// Update cart count
+function updateCartCount() {
+  const totalQty = cart.reduce((sum,i)=>sum + (i.qty || 1),0);
+  document.getElementById("cart-count").textContent = totalQty;
+}
+updateCartCount();
+
+// Render favorites
+function renderFavorites() {
+  const list = document.getElementById("favorites-list");
+  list.innerHTML = "";
+  if(favorites.length===0) {
+    list.innerHTML = "<li style='color:#ccc;text-align:center;'>No favorite items yet!</li>";
+    return;
+  }
+  favorites.forEach(item=>{
+    const name = typeof item==="object"?item.name:item;
+    const price = (typeof item==="object"?item.price:menuPrices[name])||0;
+    const qtyInCart = (cart.find(i=>i.name===name)?.qty)||0;
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <span>${name}</span>
+      <span>€${price}</span>
+      <div class="qty-controls">
+        <button class="qty-btn decrease" data-name="${name}">−</button>
+        <span class="qty-value">${qtyInCart}</span>
+        <button class="qty-btn increase" data-name="${name}" data-price="${price}">+</button>
+        <button class="fav-btn active" data-name="${name}">❤️</button>
+      </div>
+    `;
+    list.appendChild(li);
+  });
+
+  // Quantity buttons
+  document.querySelectorAll(".qty-btn.increase").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const name = btn.dataset.name;
+      const price = parseFloat(btn.dataset.price);
+      let item = cart.find(i=>i.name===name);
+      if(item) item.qty +=1;
+      else cart.push({name, price, qty:1});
+      btn.parentElement.querySelector(".qty-value").textContent = cart.find(i=>i.name===name).qty;
+      localStorage.setItem("cart",JSON.stringify(cart));
+      updateCartCount();
+    });
+  });
+  document.querySelectorAll(".qty-btn.decrease").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const name = btn.dataset.name;
+      let item = cart.find(i=>i.name===name);
+      if(!item) return;
+      item.qty -=1;
+      if(item.qty<=0){
+        cart = cart.filter(i=>i.name!==name);
+        btn.parentElement.querySelector(".qty-value").textContent=0;
+      }else{
+        btn.parentElement.querySelector(".qty-value").textContent=item.qty;
+      }
+      localStorage.setItem("cart",JSON.stringify(cart));
+      updateCartCount();
+    });
+  });
+
+  // Remove from favorites
+  document.querySelectorAll(".fav-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const name = btn.dataset.name;
+      favorites = favorites.filter(f=>{
+        if(typeof f==="object" && f!==null) return f.name!==name;
+        return f!==name;
+      });
+      localStorage.setItem("favorites",JSON.stringify(favorites));
+      renderFavorites();
+    });
+  });
+}
+
+renderFavorites();
+
+// Bottom navigation
+document.getElementById("cart-btn").addEventListener("click",()=>window.location.href="/cart");
+document.getElementById("home-btn").addEventListener("click",()=>location.href="/home");
+document.getElementById("menu-btn").addEventListener("click",()=>location.href="/menu");
+document.getElementById("chat-btn").addEventListener("click",()=>location.href="/chat");
+document.getElementById("fav-btn").addEventListener("click",()=>location.href="/favorites");
+document.getElementById("profile-btn").addEventListener("click",()=>location.href="/profile");
+</script>
+{% endblock %}

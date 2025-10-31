@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Restaurants</h1>
+
+<div class="restaurant-list">
+    {% for r in restaurants %}
+    <div class="restaurant-card">
+        <a href="/r/{{ r.id }}">{{ r.name }}</a>
+        {% if r.photo_url %}
+        <img src="{{ r.photo_url }}" width="150" alt="{{ r.name }}">
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+.restaurant-list { display: flex; flex-wrap: wrap; gap: 20px; }
+.restaurant-card { background: #fff; padding: 15px; border-radius: 10px; text-align: center; width: 150px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.restaurant-card img { border-radius: 10px; margin-top: 10px; }
+</style>
+{% endblock %}

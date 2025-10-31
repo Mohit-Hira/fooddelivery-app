@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+jinja2
+firebase-admin
+google-cloud-firestore
+google-cloud-storage
+pydantic
+aiohttp
+python-dotenv
+python-multipart

@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}Home - Yummies{% endblock %}
+
+{% block content %}
+<div class="home-container">
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Welcome to Yummies!</h1>
+    <p>Delicious meals delivered to your door 🍔🥤🍰</p>
+    <a href="/menu" class="btn-explore">Explore Menu</a>
+  </section>
+
+  <!-- Floating Cart Button -->
+  <button id="cart-btn-floating" title="Go to Cart">🛒 <span id="cart-count">0</span></button>
+
+  <!-- Category Tabs -->
+  <section class="categories">
+    <h2>Categories</h2>
+    <div class="category-tabs">
+      <button class="tab active" data-category="combo">Combo Meal</button>
+      <button class="tab" data-category="shake">Shake</button>
+      <button class="tab" data-category="sweet">Sweet Dish</button>
+    </div>
+  </section>
+
+  <!-- Items Grid -->
+  <section class="items-grid" id="items-grid"> 
+    {% set demo_items = [
+      {"name": "Burger + Fries + Coke", "price": 12.50, "category": "combo", "photo_url": "/static/images/combo 1.jpg"},
+      {"name": "Pizza Combo + Drink", "price": 14.00, "category": "combo", "photo_url": "/static/images/combo 2.jpg"},
+      {"name": "Chicken Wrap Combo", "price": 13.20, "category": "combo", "photo_url": "/static/images/combo 3.jpg"},
+      {"name": "Vanilla Shake", "price": 6.50, "category": "shake", "photo_url": "/static/images/vanila.jpg"},
+      {"name": "Cold Coffee", "price": 6.80, "category": "shake", "photo_url": "/static/images/shake2.jpg"},
+      {"name": "Mango Juice", "price": 5.00, "category": "shake", "photo_url": "/static/images/shake3.jpg"},
+      {"name": "Gulab Jamun", "price": 4.50, "category": "sweet", "photo_url": "/static/images/sweetdish1.jpg"},
+      {"name": "Kheer", "price": 4.80, "category": "sweet", "photo_url": "/static/images/sweet2.jpg"},
+      {"name": "Chocolate Brownie", "price": 5.50, "category": "sweet", "photo_url": "/static/images/sweet3.jpg"}
+    ] %}
+
+    {% for item in demo_items %}
+      <div class="item-card" 
+           data-category="{{ item.category }}" 
+           data-name="{{ item.name }}" 
+           data-price="{{ item.price }}">
+        <img src="{{ item.photo_url }}" alt="{{ item.name }}" onerror="this.src='/static/images/placeholder.jpg'">
+        <h4>{{ item.name }}</h4>
+        <p>€{{ "%.2f"|format(item.price) }}</p>
+        <div class="item-actions">
+          <button class="heart-btn">♡</button>
+          <button class="cart-btn">🛒 +</button>
+        </div>
+      </div>
+    {% endfor %}
+  </section>
+
+</div>
+
+<style>
+/* same styles as before */
+body { font-family: 'Poppins', sans-serif; background:#fff; padding-bottom:70px; }
+.home-container { max-width:700px; margin:0 auto; padding:20px; }
+.hero { text-align:center; padding:30px 0; background:#FFE5D9; border-radius:20px; margin-bottom:30px; }
+.hero h1 { color:#E46A1C; font-size:2em; margin-bottom:10px; }
+.hero p { color:#333; margin-bottom:20px; }
+.btn-explore { background:#E46A1C; color:#fff; padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:600; }
+#cart-btn-floating { position: fixed; top: 20px; right: 20px; background:#E46A1C; color:#fff; border:none; padding:10px 14px; border-radius:50%; font-size:1.4em; cursor:pointer; z-index:1000; box-shadow: 0 3px 6px rgba(0,0,0,0.2); transition:0.2s; }
+#cart-btn-floating:hover { background:#ff7a2a; }
+#cart-count { background:#fff; color:#E46A1C; border-radius:50%; font-size:0.7em; font-weight:700; padding:2px 6px; position:relative; top:-10px; left:-5px; }
+.categories h2 { color:#E46A1C; margin-bottom:10px; }
+.category-tabs { display:flex; justify-content:space-between; gap:10px; margin-bottom:20px; }
+.tab { flex:1; padding:12px; border:none; border-radius:10px; background:#FFE5D9; color:#E46A1C; font-weight:700; cursor:pointer; transition:0.2s; }
+.tab.active, .tab:hover { background:#E46A1C; color:#fff; }
+.items-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:15px; }
+.item-card { text-align:center; border-radius:15px; box-shadow:0 3px 8px rgba(0,0,0,0.1); padding:10px; transition:0.2s; background:#fff; position: relative; }
+.item-card:hover { transform:translateY(-3px); }
+.item-card img { width:100%; height:120px; object-fit:cover; border-radius:12px; }
+.item-card h4 { margin:8px 0 4px; color:#333; font-weight:600; font-size:0.95em; }
+.item-card p { color:#E46A1C; font-weight:600; margin-bottom:5px; }
+.item-actions { display:flex; justify-content:center; gap:8px; }
+.heart-btn, .cart-btn { background:#f9f9f9; border:none; border-radius:8px; padding:5px 10px; cursor:pointer; font-size:1em; transition:0.2s; }
+.heart-btn.favorited { background:#E46A1C; color:#fff; }
+.cart-btn.added { background:#E46A1C; color:#fff; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background:#E46A1C; color:#fff; padding:10px 20px; border-radius:20px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); font-weight:600; opacity: 0; transition: opacity 0.3s ease; z-index: 2000; }
+.toast.show { opacity: 1; }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const tabs = document.querySelectorAll('.tab');
+  const cards = document.querySelectorAll('.item-card');
+
+  // ----- CATEGORY FILTER -----
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const category = tab.dataset.category;
+      cards.forEach(card => {
+        card.style.display = card.dataset.category === category ? 'block' : 'none';
+      });
+    });
+  });
+  cards.forEach(card => { if (card.dataset.category !== "combo") card.style.display = "none"; });
+
+  // ----- FAVORITES -----
+  const favoritesKey = "favorites";
+  let favorites = JSON.parse(localStorage.getItem(favoritesKey)) || [];
+  document.querySelectorAll(".heart-btn").forEach(btn => {
+    const card = btn.closest(".item-card");
+    const name = card.dataset.name;
+    const price = parseFloat(card.dataset.price);
+    if (favorites.some(f => f.name === name)) btn.classList.add("favorited");
+    btn.addEventListener("click", () => {
+      if (btn.classList.contains("favorited")) {
+        favorites = favorites.filter(f => f.name !== name);
+        btn.classList.remove("favorited");
+        showToast(`${name} removed from favorites`);
+      } else {
+        favorites.push({ name, price });
+        btn.classList.add("favorited");
+        showToast(`${name} added to favorites`);
+      }
+      localStorage.setItem(favoritesKey, JSON.stringify(favorites));
+    });
+  });
+
+  // ----- CART -----
+  const cartKey = "cart";
+  let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+  function updateCartCount() {
+    const total = cart.reduce((sum, item) => sum + item.qty, 0);
+    document.getElementById("cart-count").textContent = total;
+  }
+
+  document.querySelectorAll(".cart-btn").forEach(btn => {
+    const card = btn.closest(".item-card");
+    const name = card.dataset.name;
+    const price = parseFloat(card.dataset.price);
+
+    btn.addEventListener("click", () => {
+      let found = cart.find(i => i.name === name);
+      if (found) {
+        found.qty += 1;
+      } else {
+        cart.push({ name, price, qty: 1 });
+      }
+      localStorage.setItem(cartKey, JSON.stringify(cart));
+      updateCartCount();
+      showToast(`${name} added to cart`);
+    });
+  });
+
+  document.getElementById("cart-btn-floating").addEventListener("click", () => {
+    window.location.href = "/cart";
+  });
+
+  updateCartCount();
+
+  // ----- TOAST -----
+  function showToast(msg) {
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add("show"), 10);
+    setTimeout(() => {
+      toast.classList.remove("show");
+      setTimeout(() => toast.remove(), 300);
+    }, 2000);
+  }
+});
+</script>
+{% endblock %}

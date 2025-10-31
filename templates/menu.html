@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+{% block title %}Our Menu - Yummies{% endblock %}
+
+{% block content %}
+<div class="menu-page">
+
+  <!-- Hero Section -->
+  <section class="menu-hero">
+    <img src="/static/images/burger.jpg" alt="Menu Banner" class="hero-img">
+    <div class="hero-overlay">
+      <h1>Our Menu</h1>
+      <button class="cart-btn" id="cart-btn">🛒 <span id="cart-count">0</span></button>
+    </div>
+  </section>
+
+  <!-- Header -->
+  <header class="menu-header">
+    <h2>FOOD MENU</h2>
+    <p>Pauceck &amp; Lage Restaurant</p>
+  </header>
+
+  <!-- MAIN COURSE -->
+  <section class="menu-section">
+    <h3 class="section-title">Main Course</h3>
+    <div class="menu-content">
+      <ul class="menu-list">
+        <li>
+          <span>Cheeseburger</span><span>€34</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Cheeseburger">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Cheeseburger" data-price="34">+</button>
+            <button class="fav-btn" data-name="Cheeseburger">❤️</button>
+          </div>
+        </li>
+        <li>
+          <span>Cheese Sandwich</span><span>€22</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Cheese Sandwich">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Cheese Sandwich" data-price="22">+</button>
+            <button class="fav-btn" data-name="Cheese Sandwich">❤️</button>
+          </div>
+        </li>
+        <li>
+          <span>Chicken Burger</span><span>€23</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Chicken Burger">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Chicken Burger" data-price="23">+</button>
+            <button class="fav-btn" data-name="Chicken Burger">❤️</button>
+          </div>
+        </li>
+        <li>
+          <span>Spicy Chicken</span><span>€33</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Spicy Chicken">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Spicy Chicken" data-price="33">+</button>
+            <button class="fav-btn" data-name="Spicy Chicken">❤️</button>
+          </div>
+        </li>
+        <li>
+          <span>Hot Dog</span><span>€24</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Hot Dog">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Hot Dog" data-price="24">+</button>
+            <button class="fav-btn" data-name="Hot Dog">❤️</button>
+          </div>
+        </li>
+      </ul>
+      <img src="/static/images/combo 1.jpg" alt="Main Course">
+    </div>
+  </section>
+
+  <!-- APPETIZERS -->
+  <section class="menu-section">
+    <h3 class="section-title">Appetizers</h3>
+    <div class="menu-content reverse">
+      <img src="/static/images/appetizer.jpg" alt="Appetizers">
+      <ul class="menu-list">
+        <li>
+          <span>Fruit Salad</span><span>€13</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Fruit Salad">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Fruit Salad" data-price="13">+</button>
+            <button class="fav-btn" data-name="Fruit Salad">❤️</button>
+          </div>
+        </li>
+        <li>
+          <span>Cocktails</span><span>€12</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Cocktails">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Cocktails" data-price="12">+</button>
+            <button class="fav-btn" data-name="Cocktails">❤️</button>
+          </div>
+        </li>
+        <li>
+          <span>Nuggets</span><span>€14</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Nuggets">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Nuggets" data-price="14">+</button>
+            <button class="fav-btn" data-name="Nuggets">❤️</button>
+          </div>
+        </li>
+        <li>
+          <span>Sandwich</span><span>€13</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Sandwich">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Sandwich" data-price="13">+</button>
+            <button class="fav-btn" data-name="Sandwich">❤️</button>
+          </div>
+        </li>
+        <li>
+          <span>French Fries</span><span>€15</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="French Fries">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="French Fries" data-price="15">+</button>
+            <button class="fav-btn" data-name="French Fries">❤️</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- BEVERAGES -->
+  <section class="menu-section">
+    <h3 class="section-title">Beverages</h3>
+    <div class="menu-content">
+      <ul class="menu-list">
+        <li>
+          <span>Milk Shake</span><span>€3</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Milk Shake">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Milk Shake" data-price="3">+</button>
+            <button class="fav-btn" data-name="Milk Shake">❤️</button>
+          </div>
+        </li>
+        <li>
+          <span>Iced Tea</span><span>€2</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Iced Tea">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Iced Tea" data-price="2">+</button>
+            <button class="fav-btn" data-name="Iced Tea">❤️</button>
+          </div>
+        </li>
+        <li>
+          <span>Orange Juice</span><span>€4</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Orange Juice">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Orange Juice" data-price="4">+</button>
+            <button class="fav-btn" data-name="Orange Juice">❤️</button>
+          </div>
+        </li>
+        <li>
+          <span>Lemon Tea</span><span>€3</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Lemon Tea">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Lemon Tea" data-price="3">+</button>
+            <button class="fav-btn" data-name="Lemon Tea">❤️</button>
+          </div>
+        </li>
+        <li>
+          <span>Coffee</span><span>€5</span>
+          <div class="qty-controls">
+            <button class="qty-btn decrease" data-name="Coffee">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn increase" data-name="Coffee" data-price="5">+</button>
+            <button class="fav-btn" data-name="Coffee">❤️</button>
+          </div>
+        </li>
+      </ul>
+      <img src="/static/images/drinks.jpg" alt="Beverages">
+    </div>
+  </section>
+
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+  <button class="nav-btn" id="home-btn">🏠<span>Home</span></button>
+  <button class="nav-btn active" id="menu-btn">🍔<span>Menu</span></button>
+  <button class="nav-btn" id="chat-btn">💬<span>Chat</span></button>
+  <button class="nav-btn" id="fav-btn">❤️<span>Favorites</span></button>
+  <button class="nav-btn" id="profile-btn">👤<span>Profile</span></button>
+</nav>
+
+<style>
+/* Base styles remain the same as your previous CSS */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #111;
+  color: #fff;
+  margin: 0;
+  padding-bottom: 80px;
+}
+.menu-hero { position: relative; height: 220px; overflow: hidden; border-bottom: 3px solid #E46A1C; }
+.hero-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(60%); }
+.hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; color: #fff; text-align: center; }
+.hero-overlay h1 { font-size: 2.5em; font-weight: 700; margin: 0; }
+.cart-btn { position: absolute; top: 20px; right: 20px; background: #E46A1C; border: none; color: #fff; font-size: 1.1em; padding: 8px 12px; border-radius: 10px; cursor: pointer; }
+.cart-btn span { font-weight: bold; margin-left: 5px; }
+.cart-btn:hover { background: #ff7a2a; }
+.menu-header { text-align: center; margin: 30px 0; }
+.menu-header h2 { color: #E46A1C; font-size: 1.6em; margin-bottom: 5px; }
+.menu-header p { color: #ccc; font-size: 0.95em; }
+.menu-section { margin-bottom: 40px; }
+.section-title { background: #E46A1C; color: #fff; padding: 8px 16px; border-radius: 5px; display: inline-block; font-size: 1.1em; margin-bottom: 15px; }
+.menu-content { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.menu-content.reverse { flex-direction: row-reverse; }
+.menu-list { list-style: none; padding: 0; margin: 0; flex: 1; }
+.menu-list li { display: flex; justify-content: space-between; align-items: center; font-size: 1em; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 10px 0; }
+.menu-list li span:last-child { color: #E46A1C; font-weight: 600; }
+.fav-btn { background: #E46A1C; border: none; color: #fff; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 0.9em; margin-left: 5px; transition: background 0.2s; }
+.fav-btn:hover { background: #ff7a2a; }
+.fav-btn.active { background: #fff; color: #E46A1C; }
+.menu-content img { width: 40%; border-radius: 50%; border: 3px solid #E46A1C; height: 180px; object-fit: cover; }
+
+/* Quantity buttons */
+.qty-controls { display: flex; align-items: center; gap: 5px; }
+.qty-btn { background: #E46A1C; border: none; color: #fff; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+.qty-btn:hover { background: #ff7a2a; }
+.qty-value { min-width: 20px; text-align: center; font-weight: 600; }
+
+.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; box-shadow: 0 -2px 8px rgba(0,0,0,0.1); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
+.nav-btn { background: none; border: none; color: #888; font-size: 1.2em; display: flex; flex-direction: column; align-items: center; font-weight: 500; cursor: pointer; transition: 0.2s; }
+.nav-btn span { font-size: 0.75em; }
+.nav-btn.active, .nav-btn:hover { color: #E46A1C; }
+</style>
+
+<script>
+// Initialize cart & favorites
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+// Update cart count
+function updateCartCount() {
+  const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+  document.getElementById("cart-count").textContent = totalQty;
+}
+
+// Set initial quantities
+document.querySelectorAll(".qty-controls").forEach(ctrl => {
+  const name = ctrl.querySelector(".increase").dataset.name;
+  const item = cart.find(i => i.name === name);
+  if(item) ctrl.querySelector(".qty-value").textContent = item.qty;
+});
+
+// Increase quantity
+document.querySelectorAll(".qty-btn.increase").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const name = btn.dataset.name;
+    const price = parseFloat(btn.dataset.price);
+    let item = cart.find(i => i.name === name);
+    if(item) item.qty += 1;
+    else cart.push({name, price, qty: 1});
+    btn.parentElement.querySelector(".qty-value").textContent = cart.find(i => i.name === name).qty;
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+  });
+});
+
+// Decrease quantity
+document.querySelectorAll(".qty-btn.decrease").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const name = btn.dataset.name;
+    let item = cart.find(i => i.name === name);
+    if(!item) return;
+    item.qty -= 1;
+    if(item.qty <= 0) {
+      cart = cart.filter(i => i.name !== name);
+      btn.parentElement.querySelector(".qty-value").textContent = 0;
+    } else {
+      btn.parentElement.querySelector(".qty-value").textContent = item.qty;
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+  });
+});
+
+// Update favorites buttons
+document.querySelectorAll(".fav-btn").forEach(btn => {
+  if(favorites.includes(btn.dataset.name)) btn.classList.add("active");
+  btn.addEventListener("click", e => {
+    e.stopPropagation();
+    const name = btn.dataset.name;
+    if(favorites.includes(name)) {
+      favorites = favorites.filter(f => f !== name);
+      btn.classList.remove("active");
+    } else {
+      favorites.push(name);
+      btn.classList.add("active");
+    }
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  });
+});
+
+// Navigation
+document.getElementById("cart-btn").addEventListener("click", () => window.location.href = "/cart");
+document.getElementById("home-btn").addEventListener("click", () => location.href="/home");
+document.getElementById("menu-btn").addEventListener("click", () => location.href="/menu");
+document.getElementById("chat-btn").addEventListener("click", () => location.href="/chat");
+document.getElementById("fav-btn").addEventListener("click", () => location.href="/favorites");
+document.getElementById("profile-btn").addEventListener("click", () => location.href="/profile");
+
+updateCartCount();
+</script>
+{% endblock %}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FoodApp{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f9f4; }
+        header { display:flex; justify-content:space-between; align-items:center; padding:15px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+        .logo { font-weight:bold; font-size:1.5em; }
+        .location { font-size:0.9em; color:#555; }
+        nav a, nav button { margin-left:15px; text-decoration:none; color:#333; }
+        nav button { cursor:pointer; padding:5px 10px; border:none; background:#00c853; color:white; border-radius:4px; }
+        main { padding:20px; }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+{% block scripts %}{% endblock %}
+
+<!-- ✅ Script to control nav visibility & logout -->
+<script type="module">
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBZegGPZx6MvrNvRQsFCvx2qkJ62oIkULM",
+    authDomain: "mohit-45547.firebaseapp.com",
+    projectId: "mohit-45547",
+    storageBucket: "mohit-45547.firebasestorage.app",
+    messagingSenderId: "778528943574",
+    appId: "1:778528943574:web:ccd84ce0fad485619b0877",
+    measurementId: "G-ES0PK3WFT3"
+};
+
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// ✅ Show nav only when user is logged in
+onAuthStateChanged(auth, user => {
+    const nav = document.querySelector("nav");
+    if (nav) nav.style.display = user ? "flex" : "none";
+});
+
+// ✅ Logout
+document.getElementById("logout-btn")?.addEventListener("click", async () => {
+    try {
+        await signOut(auth);
+        await fetch("/logout", { method: "GET" });
+        window.location.href = "/signin";
+    } catch (err) {
+        alert("Logout failed: " + err.message);
+    }
+});
+</script>
+
+</body>
+</html>

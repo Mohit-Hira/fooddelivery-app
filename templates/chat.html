@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Chat - Yummies{% endblock %}
+
+{% block content %}
+<div style="max-width:600px; margin:50px auto; font-family:'Poppins', sans-serif;">
+  <h2>Chat</h2>
+  <div id="chat-window" style="border:1px solid #ccc; padding:10px; height:300px; overflow-y:auto;">
+    <!-- Messages will appear here -->
+  </div>
+  <div style="display:flex; margin-top:10px;">
+    <input type="text" id="message" placeholder="Type a message..." style="flex:1; padding:8px; border-radius:5px; border:1px solid #ccc;">
+    <button id="sendBtn" style="margin-left:5px; padding:8px 15px; background:#E46A1C; color:#fff; border:none; border-radius:5px;">Send</button>
+  </div>
+</div>
+
+<!-- Bottom Navigation Bar -->
+<nav class="bottom-nav">
+  <button class="nav-btn" id="home-btn">🏠<span>Home</span></button>
+  <button class="nav-btn" id="menu-btn">🍔<span>Menu</span></button>
+  <button class="nav-btn active" id="chat-btn">💬<span>Chat</span></button>
+  <button class="nav-btn" id="fav-btn">❤️<span>Favorites</span></button>
+  <button class="nav-btn" id="profile-btn">👤<span>Profile</span></button>
+</nav>
+
+<style>
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0;
+  z-index: 1000;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 1.2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav-btn span {
+  font-size: 0.75em;
+}
+
+.nav-btn.active, .nav-btn:hover {
+  color: #E46A1C;
+}
+</style>
+
+<script>
+const chatWindow = document.getElementById('chat-window');
+const messageInput = document.getElementById('message');
+const sendBtn = document.getElementById('sendBtn');
+
+// WebSocket connection
+const ws = new WebSocket(`ws://${window.location.host}/ws/chat`);
+
+ws.onmessage = (event) => {
+    const p = document.createElement('p');
+    p.textContent = event.data;
+    chatWindow.appendChild(p);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+};
+
+sendBtn.addEventListener('click', () => {
+    const msg = messageInput.value.trim();
+    if (!msg) return;
+    ws.send(msg);
+    messageInput.value = "";
+});
+
+// Bottom navigation buttons
+document.getElementById("home-btn").addEventListener("click", () => location.href="/home");
+document.getElementById("menu-btn").addEventListener("click", () => location.href="/menu");
+document.getElementById("chat-btn").addEventListener("click", () => location.href="/chat");
+document.getElementById("fav-btn").addEventListener("click", () => location.href="/favorites");
+document.getElementById("profile-btn").addEventListener("click", () => location.href="/profile");
+</script>
+{% endblock %}
