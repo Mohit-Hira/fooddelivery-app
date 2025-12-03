@@ -25,13 +25,10 @@ storage_client = storage.Client(project=PROJECT)
 
 cred_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
 if not cred_json:
-    raise RuntimeError(
-        "Firestore credentials not set! Add GOOGLE_APPLICATION_CREDENTIALS_JSON in Render Secrets."
-    )
+    raise RuntimeError("Firestore credentials not set! Add GOOGLE_APPLICATION_CREDENTIALS_JSON in Render Secrets.")
 
 credentials = service_account.Credentials.from_service_account_info(json.loads(cred_json))
-firestore_client = firestore.Client(credentials=credentials)
-
+firestore_client = firestore.Client(credentials=credentials, project="application-477410")
 
 
 # -------------------------------
