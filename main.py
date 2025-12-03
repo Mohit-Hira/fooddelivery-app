@@ -9,6 +9,7 @@ from auth import verify_firebase_token
 from google.cloud import firestore,storage
 from db import list_restaurants, get_restaurant, create_order, upload_image_to_bucket,update_user_profile
 from datetime import datetime
+from google.oauth2 import service_account
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -23,6 +24,12 @@ storage_client = storage.Client(project=PROJECT)
 
 
 
+cred_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+if not cred_json:
+    raise RuntimeError("Firestore credentials not set! Add GOOGLE_APPLICATION_CREDENTIALS_JSON in Render Secrets.")
+
+credentials = service_account.Credentials.from_service_account_info(json.loads(cred_json))
+firestore_client = firestore.Client(credentials=credentials)
 
 
 
